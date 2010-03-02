@@ -5,7 +5,7 @@ from topsoil.exceptions import HttpResponseException
 from models import Place
 from forms import PlaceForm
 
-@resource
+@resource()
 def echo(request, format=None):
     metadata = {}
     data = {}
@@ -16,7 +16,7 @@ def echo(request, format=None):
     data['msg'] = request.GET.get('msg', '')
     return (metadata, data)
 
-@resource
+@resource()
 def place(request, place_id, format=None):
     metadata = {}
     data = {}
@@ -27,7 +27,7 @@ def place(request, place_id, format=None):
         data['title'] = place.name
     return (metadata, data)
 
-@resource
+@resource()
 def place_list(request, format=None, *args, **kwargs):
     metadata = {}
     data = {}
@@ -38,7 +38,7 @@ def place_list(request, format=None, *args, **kwargs):
     return (metadata, data)
 
 @login_required
-@resource
+@resource()
 def place_add(request, format=None, *args, **kwargs):
     metadata = {}
     data = {}
@@ -60,7 +60,7 @@ def place_add(request, format=None, *args, **kwargs):
     return (metadata, data)
 
 @login_required
-@resource
+@resource()
 def place_edit(request, format=None, *args, **kwargs):
     metadata = {}
     data = {}
