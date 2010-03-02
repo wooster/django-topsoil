@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block content %}
 <p>{{msg}}</p>
 <form method="GET" action="">
     <input value="{{msg}}" name="msg" /> 
     <input type="submit" value="Echo" />
 </form>
+<p><a href="/">Home</a></p>
 {% endblock %}

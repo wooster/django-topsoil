@@ -1,5 +1,7 @@
+from django.contrib.auth import logout as logout_auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.middleware.csrf import get_token
 from topsoil.decorators import resource
 from topsoil.exceptions import HttpResponseException
 from models import Place
@@ -81,4 +83,20 @@ def place_edit(request, format=None, *args, **kwargs):
                 data['place'] = place
         except ValueError:
             data['form'] = form
+    return (metadata, data)
+
+@resource()
+def logout(request, format=None):
+    metadata = {}
+    data = {}
+    #!! Awful, horrible.
+    token = get_token(request)
+    if token == request.GET.get('csrf_token', None):
+        logout_auth(request)
+        data['message'] = 'Logout successful.'
+        if format == 'html':
+            raise HttpResponseException(HttpResponseRedirect(request.GET.get('next') or "/"))
+    else:
+        raise APIForbiddenException('Logout unsuccessful, incorrect CSRF token.')
+    # Gets here if successful but not HTML.
     return (metadata, data)

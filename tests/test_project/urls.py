@@ -9,5 +9,7 @@ urlpatterns += patterns('testapp.views',
 )
 
 urlpatterns += patterns('',
+    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    (r'^accounts/logout/$', 'test_project.testapp.resources.logout'),
     url(r'^', include('test_project.testapp.urls')),
 )

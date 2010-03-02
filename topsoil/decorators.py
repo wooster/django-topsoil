@@ -17,7 +17,7 @@ def resource(authenticator=NoAuthenticationAuthenticator, formatter=default_form
             try:
                 format = formatter(request, *args, **kwargs)
                 (emitter_klass, emitter_mime) = EmitterFactory.get(format)
-    
+                
                 # Make sure we don't violate the function interface.
                 kwargs.pop('emitter_format', None)
                 kwargs['format'] = format

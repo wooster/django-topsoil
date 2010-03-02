@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block content %}
 <h1>Place</h1>
 <ul>
     <li>Name: {{place.name}}</li>
     <li>URL: <a href={{place.url}}>{{place.url}}</a></li>
     <li>Created on: {{place.date}}</li>
 </ul>
-<p><a href="/places">All Places</a></p>
+<p><a href="/">Home</a>, <a href="/places">All Places</a></p>
 {% endblock %}

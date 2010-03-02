@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block content %}
 <h1>Places</h1>
 {% if places %}
 <ul>
@@ -8,8 +8,9 @@
     <li><a href="{{place.get_absolute_url}}">{{place.name}}</a> (<a href="{{place.get_edit_url}}">edit</a>)</li>
     {% endfor %}
 </ul>
-<p><a href="/places/add">Add Place</a></p>
+<p><a href="/">Home</a>, <a href="/places/add">Add Place</a></p>
 {% else %}
-<p>No places to show. You could <a href="/places/add">add one</a>.</p>
+<p>No places to show. You could <a href="/places/add">add one</a>, or 
+   go <a href="/">Home</a>.</p>
 {% endif %}
 {% endblock %}

@@ -1,5 +1,13 @@
 <html>
 <head><title>{% block title %}{{title}}{% endblock %}</title></head>
-<body>{% block body %}{% endblock %}
+<body>
+{% block nav %}
+  {% if user.is_authenticated %}
+    Logged in as {{user.username}}. <a href="/accounts/logout?csrf_token={{csrf_token|urlencode}}&amp;next={{request.path|default:"/"|urlencode}}">Logout</a>
+  {% else %}
+    <a href="/accounts/login?next={{request.path|default:"/"|urlencode}}">Login</a>
+  {% endif %}
+{% endblock %}
+{% block content %}{% endblock %}
 </body>
 </html>
