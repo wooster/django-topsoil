@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from exceptions import APIForbiddenException
 
-FORMAT_PATTERN = "(\.(?P<emitter_format>.+))?"
+FORMAT_PATTERN = "(\.(?P<emitter_format>\w+))?"
 
 class HttpResponseNotImplemented(HttpResponse):
     def __init__(self):
@@ -20,7 +20,6 @@ def default_formatter(request, *args, **kwargs):
         else:
             default = DEFAULT_NONAPI_FORMATS[0]
         format = request.GET.get('format', default)
-    
     if is_api:
         if format not in DEFAULT_API_FORMATS:
             raise APIForbiddenException(message="Format forbidden here: %s" % format)
