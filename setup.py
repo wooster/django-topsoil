@@ -13,7 +13,7 @@ setup(
     name = 'django-topsoil',
     version = '0.1',
     url = 'https://github.com/wooster/django-topsoil',
-    download_url = 'https://github.com/wooster/topsoil/downloads',
+    download_url = 'https://github.com/wooster/django-topsoil/downloads',
     license = 'BSD',
     description = "topsoil is a Django framework for creating APIs.",
     author = 'Andrew Wooster',
