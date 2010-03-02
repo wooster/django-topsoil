@@ -8,7 +8,7 @@ except User.DoesNotExist:
     test_user = User.objects.create_user('test', 'test@example.com', 'test')
     test_user.save()
 
-urlpatterns = patterns('testapp.handlers',
+urlpatterns = patterns('testapp.resources',
     url(r'^echo%s$' % FORMAT_PATTERN, 'echo'),
     url(r'^places%s$' % FORMAT_PATTERN, 'place_list'),
     url(r'^places/(?P<place_id>\d+)%s$' % FORMAT_PATTERN, 'place'),
