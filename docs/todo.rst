@@ -1,5 +1,3 @@
-* BaseResource uses an ugly hack to set self.__name__ so the cache_page
-  decorator will work.
-  - Need to come up with a better solution for caching.
-  - What can we do to work better with the Django view decorators?
-* ratelimit_post and login_reqiured decorator equivalents
+* OAuth integration.
+* Middleware to disable cookie-based auth on API requests and default
+  to one of the authenticators defined in a settings file.

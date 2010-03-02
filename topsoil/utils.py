@@ -11,8 +11,11 @@ DEFAULT_API_PREFIX = '/api'
 DEFAULT_API_FORMATS = ('json', 'xml',)
 DEFAULT_NONAPI_FORMATS = ('html',)
 
+def default_is_request_api(request):
+    return request.path.lower().startswith(DEFAULT_API_PREFIX)
+
 def default_formatter(request, *args, **kwargs):
-    is_api = request.path.lower().startswith(DEFAULT_API_PREFIX)
+    is_api = default_is_request_api(request)
     format = kwargs.get('emitter_format', None)
     if not format:
         if is_api:
@@ -26,3 +29,4 @@ def default_formatter(request, *args, **kwargs):
     elif format not in DEFAULT_NONAPI_FORMATS:
         raise APIForbiddenException(message="Format forbidden here: %s" % format)
     return format
+

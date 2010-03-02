@@ -50,6 +50,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'topsoil.middleware.ApiCsrfExemptionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
