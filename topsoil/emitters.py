@@ -14,7 +14,7 @@ try:
     import cStringIO as StringIO
 except ImportError:
     import StringIO
-from utils import HttpResponseException
+from exceptions import HttpResponseException
 
 LOWERCASE_MODEL_NAMES = True
 POINT_TYPE_NAME_X = 'longitude'

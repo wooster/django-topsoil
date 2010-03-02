@@ -3,16 +3,21 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User, AnonymousUser
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
+from exceptions import HttpResponseException
 from oauth.oauth import OAuthError
 from oauth_provider.decorators import CheckOAuth
 from oauth_provider.utils import initialize_server_request, send_oauth_error
+from utils import HttpResponseNotImplemented
 
 class BaseAuthenticator(object):
     def authenticate(self, request):
         return (True, None)
+    def challenge_response(self):
+        raise HttpResponseException(HttpResponseNotImplemented())
 
 class NoAuthenticationAuthenticator(BaseAuthenticator):
-    pass
+    def challenge_response(self):
+        raise HttpResponseException(HttpResponseNotImplemented())
 
 class HttpBasicAuthenticator(BaseAuthenticator):
     def __init__(self, auth_function=authenticate, realm='API'):

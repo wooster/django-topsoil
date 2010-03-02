@@ -2,4 +2,4 @@
   decorator will work.
   - Need to come up with a better solution for caching.
   - What can we do to work better with the Django view decorators?
-* ratelimit_post and login_requred decorator equivalents
+* ratelimit_post and login_reqiured decorator equivalents
