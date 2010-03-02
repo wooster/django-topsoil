@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block body %}
+<p>{{msg}}</p>
+<form method="GET">
+    <input value="{{msg}}" name="msg" /> 
+    <input type="button" value="Echo" />
+</form>
+{% endblock %}

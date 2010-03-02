@@ -1,0 +1,6 @@
+include AUTHORS
+include LICENSE
+include MANIFEST.in
+recursive-include topsoil *.py
+recursive-include topsoil/templates *
+prune topsoil/*.pyc

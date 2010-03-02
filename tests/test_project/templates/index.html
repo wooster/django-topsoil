@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Topsoil Test App</h1>
+<p>echo</p>
+<ul>
+    <li><a href="/echo.html">HTML</a></li>
+    <li><a href="/api/echo.xml">XML</a></li>
+    <li><a href="/api/echo.json">JSON</a></li>
+</ul>
+
+<p>places</p>
+<ul>
+    <li><a href="/places">Places</a> (<a href="/api/places.xml">XML</a>)</li>
+    <li><a href="/places/add">Add Place</a></li>
+</ul>
+{% endblock %}
