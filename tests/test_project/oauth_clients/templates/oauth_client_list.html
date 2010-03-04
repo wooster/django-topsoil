@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Your Registered Applications</h1>
+{% if applications %}
+  <ul>
+  {% for application in applications %}
+    <li><p><a href="{{application.get_absolute_url}}">{{application.name}}</a>
+        by 
+        <a href="{{application.organization_url}}">{{application.organization_name}}</a>
+        <br />
+        {{application.consumer.description}}
+        </p></li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>You haven't registered any applications yet.</p>
+{% endif %}
+
+<p><a href="/oauth_clients/new">Register a new application</a></p>
+{% endblock %}

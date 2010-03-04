@@ -2,10 +2,12 @@ from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
 from topsoil.utils import FORMAT_PATTERN
 
+#!! Should be fixtures:
 try:
     test_user = User.objects.get(username='test')
 except User.DoesNotExist:
     test_user = User.objects.create_user('test', 'test@example.com', 'test')
+    test_user.is_superuser = True
     test_user.save()
 
 urlpatterns = patterns('testapp.resources',

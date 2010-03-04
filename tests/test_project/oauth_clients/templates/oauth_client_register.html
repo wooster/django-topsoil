@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Register an Application</h1>
+<form method="post">
+{% csrf_token %}
+  <table>
+  {{form}}
+  </table>
+  <input name="save" type="submit" value="Save" />
+</form>
+{% endblock %}
