@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from forms import OAuthApplicationForm
@@ -81,4 +81,8 @@ def oauth_authorize(request, token, callback, params):
        Set this view in settings.py with the OAUTH_AUTHORIZE_VIEW
        setting, like so:
        OAUTH_AUTHORIZE_VIEW = 'oauth_clients.views.oauth_authorize' """
-    return HttpResponse('Callback view.#!!')
+    return HttpResponse('Callback view is unimplemented!!')
+
+@login_required
+def oauth_authenticate(request):
+    return HttpResponse('Authenticate view is unimplemented!!')

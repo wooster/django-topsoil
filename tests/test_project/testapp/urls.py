@@ -12,6 +12,7 @@ except User.DoesNotExist:
 
 urlpatterns = patterns('testapp.resources',
     url(r'^echo%s$' % FORMAT_PATTERN, 'echo'),
+    url(r'^account/verify_credentials%s$' % FORMAT_PATTERN, 'verify_credentials'),
     url(r'^places%s$' % FORMAT_PATTERN, 'place_list'),
     url(r'^places/(?P<place_id>\d+)%s$' % FORMAT_PATTERN, 'place'),
     url(r'^places/add%s$' % FORMAT_PATTERN, 'place_add'),

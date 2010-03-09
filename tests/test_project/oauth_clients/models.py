@@ -24,6 +24,10 @@ class OAuthApplication(models.Model):
     
     user_count = models.IntegerField(default=0)
     
+    class Meta:
+        verbose_name = _('OAuth application')
+        verbose_name_plural = _('OAuth applications')
+    
     def get_absolute_url(self):
         return "/oauth_clients/%d" % self.id
 
@@ -45,3 +49,7 @@ class OAuthApplication(models.Model):
         if self.login_permission:
             perms.append('login')
         return '/'.join(perms)
+    
+    def name(self):
+        return self.consumer.name
+

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Test OAuth App</h1>
+<p style="background-color: #f0f7f9">Make sure you start this app with start.sh</p>
+
+{% if user.is_authenticated %}
+  <p>places</p>
+  <ul>
+      <li><a href="/places">Places</a> (<a href="/api/places.xml">XML</a>)</li>
+      <li><a href="/places/add">Add Place</a></li>
+  </ul>
+{% else %}
+  <p><a href="/login">Login Using OAuth</a></p>
+{% endif %}
+{% endblock %}

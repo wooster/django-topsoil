@@ -1,0 +1,13 @@
+<html>
+<head><title>{% block title %}{{title}}{% endblock %}</title></head>
+<body>
+{% block nav %}
+  {% if user.is_authenticated %}
+    Logged in as {{user.username}}. <a href="/logout">Logout</a>
+  {% else %}
+    <a href="/login">Login with OAuth</a>
+  {% endif %}
+{% endblock %}
+{% block content %}{% endblock %}
+</body>
+</html>

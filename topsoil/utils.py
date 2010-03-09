@@ -7,12 +7,24 @@ class HttpResponseNotImplemented(HttpResponse):
     def __init__(self):
         super(HttpResponseNotImplemented, self).__init__(content='Not Implemented', content_type='text/plain', status=501)
 
-DEFAULT_API_PREFIX = '/api'
+DEFAULT_API_PREFIXES = ['/api']
+DEFAULT_OAUTH_PREFIXES = ['/oauth']
 DEFAULT_API_FORMATS = ('json', 'xml',)
 DEFAULT_NONAPI_FORMATS = ('html',)
 
 def default_is_request_api(request):
-    return request.path.lower().startswith(DEFAULT_API_PREFIX)
+    path = request.path.lower()
+    for prefix in DEFAULT_API_PREFIXES:
+        if path.startswith(prefix):
+            return True
+    return False
+
+def default_is_request_oauth(request):
+    path = request.path.lower()
+    for prefix in DEFAULT_OAUTH_PREFIXES:
+        if path.startswith(prefix):
+            return True
+    return False
 
 def default_formatter(request, *args, **kwargs):
     is_api = default_is_request_api(request)

@@ -18,6 +18,14 @@ def echo(request, format=None):
     data['msg'] = request.GET.get('msg', '')
     return (metadata, data)
 
+@login_required
+@resource()
+def verify_credentials(request):
+    metadata = {}
+    data = {}
+    data['user'] = request.user
+    return (metadata, data)
+
 @resource()
 def place(request, place_id, format=None):
     metadata = {}
