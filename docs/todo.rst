@@ -5,3 +5,4 @@
 * Add instance of {"all", "/"} for Resource.
   * Explore integration of resource. Need to pass in 'scope' param in
     OAuth request as an additional parameter.
+* Add views for viewing and revoking authorized apps.
