@@ -83,6 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'client',
+    'places',
 )
 
 AUTHENTICATION_BACKENDS = (

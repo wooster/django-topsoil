@@ -9,3 +9,7 @@ urlpatterns = patterns('client.views',
     (r'^logout$', 'places_signout'),
     (r'^return$', 'places_return'),
 )
+
+urlpatterns += patterns('',
+    (r'^places', include('places.urls')),
+)

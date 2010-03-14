@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% block h1 %}Add Place{% endblock %}</h1>
+<form method="post">
+{% csrf_token %}
+  <table>
+    {{form}}
+  </table>
+  <input type="submit" value="{% block submit %}Add Place{% endblock %}">
+</form>
+<p><a href="/">Home</a>, <a href="/places">All Places</a></p>
+{% endblock %}

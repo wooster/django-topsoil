@@ -1,4 +1,3 @@
-# Create your views here.
 from django.conf import settings
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect, HttpResponse

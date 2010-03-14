@@ -113,9 +113,9 @@ class PlacesClient(object):
         return self.retrieve_json(url)
     
     def add_place(self, name='', url=''):
-        url = '%s/api/places/add.json' % PLACES_SERVER
+        post_url = '%s/api/places/add.json' % PLACES_SERVER
         post_data = {'name':name, 'url':url}
-        return self.retrieve_json(url, post_data=post_data)
+        return self.retrieve_json(post_url, post_data=post_data)
     
     def edit_place(self, name='', url=''):
         url = '%s/api/places/%d/edit.json' % PLACES_SERVER
