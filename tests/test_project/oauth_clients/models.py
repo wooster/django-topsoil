@@ -50,6 +50,12 @@ class OAuthApplication(models.Model):
             perms.append('login')
         return '/'.join(perms)
     
+    def wants_access_permission(self):
+        return self.read_permission
+    
+    def wants_modify_permission(self):
+        return self.write_permission or self.delete_permission
+    
     def name(self):
         return self.consumer.name
 

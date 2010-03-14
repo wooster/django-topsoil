@@ -51,7 +51,19 @@ class ApiOauthMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
         if default_is_request_api(request):
             request.__class__.user = LazyAnonUser()
-            return None
+        resource_name = getattr(request, 'oauth_resource_name', None)
+        if CheckOAuth.is_valid_request(request):
+            try:
+                consumer, token, parameters = CheckOAuth.validate_token(request)
+            except OAuthError, e:
+                return None
+                #!! ??return send_oauth_error(e)
+            if resource_name and token.resource.name != resource_name:
+                return send_oauth_error(OAuthError(_('You are not allowed to access this resource.')))
+            elif consumer and token:
+                if token.user:
+                    request.__class__.user = token.user
+                
             """!!
             resource_name = getattr(request, 'oauth_resource_name', None)
             if CheckOAuth.is_valid_request(request):

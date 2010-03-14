@@ -6,4 +6,7 @@ urlpatterns = patterns('oauth_clients.views',
     url(r'^(?P<application_id>\d+)$', 'oauth_application_details'),
     url(r'^(?P<application_id>\d+)/edit$', 'oauth_application_edit'),
     url(r'^(?P<application_id>\d+)/reset_key$', 'oauth_application_reset_key'),
+    
+    #!! need view to list authorized apps
+    #!! need view to revoke authorized app
 )

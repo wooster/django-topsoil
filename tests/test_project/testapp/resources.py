@@ -20,7 +20,7 @@ def echo(request, format=None):
 
 @login_required
 @resource()
-def verify_credentials(request):
+def verify_credentials(request, format=None):
     metadata = {}
     data = {}
     data['user'] = request.user

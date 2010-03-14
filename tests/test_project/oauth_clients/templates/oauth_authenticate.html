@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if not user.is_authenticated %}
+  <h1>Sign in with your account</h1>
+  <p>The application <b>{{application.consumer.name}}</b> by <b>{{application.organization_name}}</b> would like to sign you in using your acount.</p>
+  <p>Not using this site? <a href="/account/register?oauth_token={{oauth_token}}">Sign up!</a></p>
+  <p>By signing in here, you can use your account to use {{application.consumer.name}} without giving them your password. If you change your mind, you can revoke authorization later.</p>
+  <form method="post" action="">
+  {% csrf_token %}
+  <table>
+  <tr>
+      <td>{{ form.username.label_tag }}</td>
+      <td>{{ form.username }}</td>
+  </tr>
+  <tr>
+      <td>{{ form.password.label_tag }}</td>
+      <td>{{ form.password }}</td>
+  </tr>
+  </table>
+  <!-- !! cancel? -->
+  <input type="submit" value="cancel" name="cancel" />
+  <input type="submit" value="login" />
+  <input type="hidden" name="next" value="{{ next }}" />
+  <!-- !! oauth token handling -->
+  <input type="hidden" value="{{oauth_token}}" name="oauth_token" />
+  </form>
+{% else %}
+  <h1>An application would like to use your account to authenticate</h1>
+  <p>The application 
+     <b>{{application.consumer.name}}</b> by 
+     <b>{{application.organization_name}}</b> 
+     would like to sign you in using your 
+     acount{% if application.wants_modify_permission %}
+      and to <b>access and modify</b> your data{% else %}{% if application.wants_read_permission%} 
+      and to <b>access</b> your data{% endif %}{% endif %}.
+  </p>
+  <p><a href="?action=logout&amp;oauth_token={{oauth_token}}">Sign out</a> 
+      if you want to grant access with an account other than
+      <b>{{user.username}}</b>.
+  </p>
+  <h2>Allow <b>{{application.consumer.name}}</b> access?</h2>
+  <form method="post" action="">
+    {% csrf_token %}
+    <input type="hidden" value="{{oauth_token}}" name="oauth_token" />
+    <input type="submit" value="cancel" name="Deny" />
+    <input type="submit" value="Allow" />
+  </form>
+{% endif %}
+{% endblock %}

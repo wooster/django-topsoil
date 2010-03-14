@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^api/', include('test_project.testapp.urls')),
     url(r'^oauth_clients/', include('test_project.oauth_clients.urls')),
     url(r'^oauth/authenticate/', 'test_project.oauth_clients.views.oauth_authenticate'),
+    url(r'^oauth/authorize/', 'test_project.oauth_clients.views.oauth_authorize_wrapper'),
     url(r'^oauth/', include('oauth_provider.urls')),
 )
 

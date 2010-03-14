@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>You've denied <a href="{{application.callback_url}}?denied={{oauth_token}}">{{application.consumer.name}}</a> access to your account!</h1>
+{% endblock %}

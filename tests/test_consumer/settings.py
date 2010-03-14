@@ -82,6 +82,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
+    'client',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -93,3 +94,4 @@ AUTH_PROFILE_MODULE = "client.UserProfile"
 
 PLACES_CONSUMER_KEY = 'x2aV8unHhXj8paGa'
 PLACES_CONSUMER_SECRET = 'ZjUg2pXEXhGYmmLj'
+OAUTH_CALLBACK_URL = 'http://0.0.0.0:8082/return'

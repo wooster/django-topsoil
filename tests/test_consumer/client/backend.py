@@ -1,19 +1,18 @@
 from django.conf import settings
 from django.contrib.auth.models import User
-from models import PlacesUser
+from models import PlacesUser, UserProfile
 from place_client import OAuthClient
-from tweets.utils import get_or_create_user_for_id
 
 CONSUMER_KEY = getattr(settings, 'PLACES_CONSUMER_KEY')
 CONSUMER_SECRET = getattr(settings, 'PLACES_CONSUMER_SECRET')
 
-class TwitterBackend:
+class PlacesBackend:
     """Based on: http://www.djangosnippets.org/snippets/1473/"""
     def authenticate(self, access_token):
         places = OAuthClient(CONSUMER_KEY, CONSUMER_SECRET, access_token)
         try:
             userinfo = places.verify_credentials()
-        except:
+        except Exception, e:
             return None
         
         try:
@@ -36,8 +35,11 @@ class TwitterBackend:
         user.save()
         
         # Get user profile.
-        userprofile = user.get_profile()
-        userprofile.places_user = twitter_user
+        try:
+            userprofile = user.get_profile()
+        except UserProfile.DoesNotExist:
+            userprofile = UserProfile.objects.get_or_create(user=user)
+        userprofile.places_user = places_user
         userprofile.access_token = str(access_token)
         userprofile.save()
         return user

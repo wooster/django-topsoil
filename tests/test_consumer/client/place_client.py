@@ -85,10 +85,11 @@ class PlacesClient(object):
             return contents
         except (urllib2.URLError, socket.error, httplib.BadStatusLine), e:
             # I kid you not, you need to handle these.
-            #!!print >> sys.stderr, "HTTP Error:", e
+            print >> sys.stderr, "HTTP Error:", e #!!-
+            print >> sys.stderr, e.read()
             return None
         except Exception, e:    
-            #!!print >> sys.stderr, "Unknown Exception:", e
+            print >> sys.stderr, "Unknown Exception:", e #!!-
             raise e
             return None
     
@@ -129,18 +130,19 @@ class OAuthOpener(PlacesBasicAuthOpener):
 
 
 class OAuthClient(PlacesClient):
-    def __init__(self, consumer_key, consumer_secret, access_token=None):
+    def __init__(self, consumer_key, consumer_secret, access_token=None, verifier=None):
         super(OAuthClient, self).__init__(self)
-        self.access_token = access_token
+        self._access_token = access_token
+        self._verifier = verifier
         self.consumer = oauth.OAuthConsumer(consumer_key, consumer_secret)
     
-    def build_request(self, url, post_data=None, token=None):
-        if not token:
-            token = self.access_token
+    def build_request(self, url, post_data=None, token=None, callback_url=None):
         method = 'POST'
         if post_data is None and token is None:
             method = 'GET'
-        oauth_request = oauth.OAuthRequest.from_consumer_and_token(self.consumer, token=token, http_url=url, parameters=post_data, http_method=method)
+        if not token:
+            token = self._access_token
+        oauth_request = oauth.OAuthRequest.from_consumer_and_token(self.consumer, token=token, http_url=url, parameters=post_data, http_method=method, callback=callback_url, verifier=self._verifier)
         self.sign_request(oauth_request)
         if post_data is None:
             oauth_post_data = None
@@ -153,23 +155,23 @@ class OAuthClient(PlacesClient):
             request.add_data(oauth_post_data)
         return request
     
-    def retrieve_url(self, url, raise_notfound=False, post_data=None, request=None):
+    def retrieve_url(self, url, raise_notfound=False, post_data=None, request=None, callback_url=None):
         if request is None:
-            request = self.build_request(url, post_data=post_data)
+            request = self.build_request(url, post_data=post_data, callback_url=callback_url)
         return super(OAuthClient, self).retrieve_url(url, raise_notfound=raise_notfound, post_data=post_data, request=request)
         
     def sign_request(self, request, signature_method=oauth.OAuthSignatureMethod_HMAC_SHA1()):
-        request.sign_request(signature_method, self.consumer, self.access_token)
+        request.sign_request(signature_method, self.consumer, self._access_token)
         
-    def request_token(self, url=REQUEST_TOKEN_URL):
+    def request_token(self, url=REQUEST_TOKEN_URL, callback_url=None):
         token = None
-        response = self.retrieve_url(url)
+        response = self.retrieve_url(url, callback_url=callback_url)
         if response:
             token = oauth.OAuthToken.from_string(response)
         return token
     
-    def access_token(self, url=ACCESS_TOKEN_URL):
-        return self.request_token(url=url)
+    def access_token(self, url=ACCESS_TOKEN_URL, callback_url=None):
+        return self.request_token(url=url, callback_url=callback_url)
     
     def authorization_url(self, token, url=USER_AUTHORIZATION_URL):
         request = self.build_request(url, token=token)
@@ -179,6 +181,6 @@ class OAuthClient(PlacesClient):
         return self.authorization_url(token, url)
     
     def verify_credentials(self):
-        url = '%s/api/accounts/verify_credentials.json'
+        url = '%s/api/account/verify_credentials.json' % PLACES_SERVER
         data = self.retrieve_json(url)
         return data.get('user', None)

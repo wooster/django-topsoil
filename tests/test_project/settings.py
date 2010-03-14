@@ -75,3 +75,5 @@ INSTALLED_APPS = (
     'oauth_provider',
     'topsoil',
 )
+
+OAUTH_AUTHORIZE_VIEW = 'oauth_clients.views.oauth_authorize'
