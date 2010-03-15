@@ -2,9 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
-from forms import OAuthApplicationForm
+from forms import OAuthApplicationForm, RevokeApplicationForm
 from models import OAuthApplication
 from oauth.oauth import OAuthError
+from oauth_provider.models import Token
 from oauth_provider.utils import initialize_server_request, send_oauth_error
 from oauth_provider.views import user_authorization
 
@@ -116,3 +117,28 @@ def oauth_authenticate(request, token, callback, params):
     context['user'] = request.user
     context['oauth_token'] = token.key
     return HttpResponse('Authenticate view is unimplemented!!')
+
+@login_required
+def oauth_connection_list(request):
+    context = {'title':'Authorized Applications'}
+    tokens = Token.objects.filter(user=request.user)
+    consumers = [token.consumer for token in tokens]
+    applications = OAuthApplication.objects.filter(consumer__in=consumers)
+    context['approved_applications'] = applications
+    return render_to_response('oauth_connection_list.html', context_instance=RequestContext(request, context))
+
+@login_required
+def oauth_connection_revoke(request, application_id):
+    context = {'title':'Revoke Application Access?'}
+    application = get_object_or_404(OAuthApplication, id=application_id)
+    context['application'] = application
+    if request.POST:
+        form = RevokeApplicationForm(request.POST)
+        if not request.POST.get('cancel', False):
+            tokens = Token.objects.filter(user=request.user, consumer=application.consumer)
+            tokens.delete()
+        return HttpResponseRedirect('/oauth_clients/connections')
+    else:
+        form = RevokeApplicationForm(initial={'application_id':application_id})
+    context['form'] = form
+    return render_to_response('oauth_connection_revoke.html', context_instance=RequestContext(request, context))

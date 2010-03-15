@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Applications You've Authorized to Access Your Account</h1>
+{% if approved_applications %}
+  <ul>
+  {% for application in approved_applications %}
+    <li><p><a href="{{application.get_absolute_url}}">{{application.name}}</a>
+        by 
+        <a href="{{application.organization_url}}">{{application.organization_name}}</a>
+        <br />
+        {{application.consumer.description}}
+        <br />
+        <a href="{{application.get_revoke_url}}">Revoke Access</a>
+        </p></li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>You haven't authorized any applications yet.</p>
+{% endif %}
+
+<p><a href="/">Home</a></p>
+{% endblock %}

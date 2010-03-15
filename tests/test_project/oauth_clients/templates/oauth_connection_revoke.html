@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Revoke Access for {{application.consumer.name}}?</h1>
+<form method="post">
+{% csrf_token %}
+  <table>
+  {{form}}
+  </table>
+  <input name="cancel" type="submit" value="Cancel" />
+  <input name="save" type="submit" value="Revoke Access" />
+</form>
+{% endblock %}

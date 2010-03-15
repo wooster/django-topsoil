@@ -30,6 +30,9 @@ class OAuthApplication(models.Model):
     
     def get_absolute_url(self):
         return "/oauth_clients/%d" % self.id
+    
+    def get_revoke_url(self):
+        return "/oauth_clients/%d/revoke_connection" % self.id
 
     def approval_status(self):
         status = self.consumer.status

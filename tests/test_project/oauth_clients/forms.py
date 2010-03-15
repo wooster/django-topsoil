@@ -4,6 +4,9 @@ from models import OAuthApplication
 from oauth_provider.consts import OUT_OF_BAND
 from oauth_provider.models import Consumer
 
+class RevokeApplicationForm(forms.Form):
+    application_id = forms.IntegerField(widget=forms.HiddenInput)
+
 class OAuthApplicationForm(forms.Form):
     READ_ONLY = 1
     READ_AND_WRITE = 2
