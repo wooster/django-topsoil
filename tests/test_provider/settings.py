@@ -58,7 +58,7 @@ MIDDLEWARE_CLASSES = (
     'topsoil.middleware.ApiOauthMiddleware',
 )
 
-ROOT_URLCONF = 'test_project.urls'
+ROOT_URLCONF = 'test_provider.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates')
