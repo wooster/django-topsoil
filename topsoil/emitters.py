@@ -128,7 +128,6 @@ class Emitter(object):
             fields = self.fieldsForModel(data.__class__)
             for field in fields:
                 show_detail = True
-                print self._currentDetailLevel, self._detailLevel
                 if self._detailLevel != 0 and self._currentDetailLevel >= self._detailLevel:
                     show_detail = False
                 if field.rel and show_detail:
