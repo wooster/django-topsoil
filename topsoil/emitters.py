@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from django.core.serializers.json import DateTimeAwareJSONEncoder
@@ -19,6 +20,10 @@ from exceptions import HttpResponseException
 LOWERCASE_MODEL_NAMES = True
 POINT_TYPE_NAME_X = 'longitude'
 POINT_TYPE_NAME_Y = 'latitude'
+TOPSOIL_EXCLUSIONS = {
+    User:['password', 'email', 'is_superuser', 'is_staff', 'last_login']
+    }
+TOPSOIL_DEFAULT_DETAIL_LEVEL = 2
 
 class NamedDict(object):
     """Used by the default `Emitter` to represent a dictionary with a name."""
@@ -50,20 +55,27 @@ class Emitter(object):
     data = {}
     request = None
     _cachedFieldsForModel = {}
+    _detailLevel = TOPSOIL_DEFAULT_DETAIL_LEVEL
+    _currentDetailLevel = 1
+    
     def __init__(self, request, metadata, data):
         self.request = request
         self.metadata = metadata
         self.data = data
+        # 0 for infinite, 1 for no recurse on model, 2 and above
+        # to show detail for that level of models.
+        self.detailLevel = metadata.get('detail', 0)
     
     def fieldsForModel(self, model_klass):
         if self._cachedFieldsForModel.has_key(model_klass):
             return self._cachedFieldsForModel[model_klass]
         fields = []
         exclusions = getattr(model_klass._meta, 'topsoil_exclude', [])
+        if TOPSOIL_EXCLUSIONS.has_key(model_klass):
+            exclusions.extend(TOPSOIL_EXCLUSIONS[model_klass])
         for field in model_klass._meta.fields:
-            field_name = field.attname
-            if field_name not in exclusions:
-                fields.append(field_name)
+            if field.attname not in exclusions and field.name not in exclusions:
+                fields.append(field)
         self._cachedFieldsForModel[model_klass] = fields
         return fields
     
@@ -77,6 +89,8 @@ class Emitter(object):
                 ret = _dict(data)
             elif isinstance(data, Decimal):
                 ret = str(data)
+            elif hasattr(data, 'topsoil_encode') and callable(getattr(data, 'topsoil_encode')):
+                ret = _any(data.topsoil_encode())
             elif isinstance(data, models.query.QuerySet):
                 ret = _list(data)
             elif isinstance(data, models.Model):
@@ -103,6 +117,9 @@ class Emitter(object):
                 ret[key] = _any(value)
             return ret
         
+        def _fk(data, field):
+            return _any(getattr(data, field.name))
+        
         def _model(data):
             model_name = data.__class__.__name__
             if LOWERCASE_MODEL_NAMES:
@@ -110,7 +127,17 @@ class Emitter(object):
             ret = {}
             fields = self.fieldsForModel(data.__class__)
             for field in fields:
-                ret[field] = _any(getattr(data, field))
+                show_detail = True
+                print self._currentDetailLevel, self._detailLevel
+                if self._detailLevel != 0 and self._currentDetailLevel >= self._detailLevel:
+                    show_detail = False
+                if field.rel and show_detail:
+                    # Related field.
+                    self._currentDetailLevel += 1
+                    ret[field.name] = _fk(data, field)
+                    self._currentDetailLevel -= 1
+                else:
+                    ret[field.attname] = _any(getattr(data, field.attname))
             #!! Todo:
             # Many to many, relationships, and foreign keys.
             
@@ -181,9 +208,9 @@ class XMLEmitter(Emitter):
             if resource_name:
                 xml.startElement(resource_name, {})
             for key, value in data.iteritems():
-                xml.startElement(key, {})
+                xml.startElement(str(key), {})
                 self._xml(xml, value, resource_name=None)
-                xml.endElement(key)
+                xml.endElement(str(key))
             if resource_name:
                 xml.endElement(resource_name)
         elif isinstance(data, NamedDict):

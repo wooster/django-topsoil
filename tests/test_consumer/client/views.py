@@ -33,15 +33,18 @@ def places_return(request):
     # If there's no request_token for the session, that means
     # we didn't redirect the user.
     if not request_token:
-        # Meh. !!
+        # Return proper error page!!
         return HttpResponse('We didn\'t redirect you to the test app...')
     token = oauth.OAuthToken.from_string(request_token)
     if token.key != request.GET.get('oauth_token', 'no-token'):
         del request.session['request_token']
+        # Return proper error page!!
         return HttpResponse('Something is wrong! Tokens do not match...')
     # OAuth 1.0a support.
     verifier = request.GET.get('oauth_verifier', None)
     places = OAuthClient(settings.PLACES_CONSUMER_KEY, settings.PLACES_CONSUMER_SECRET, access_token=token, verifier=verifier)
+    
+    # Return proper error page on HTTP Error!!
     access_token = places.access_token(callback_url=settings.OAUTH_CALLBACK_URL)
     request.session['access_token'] = access_token.to_string()
     auth_user = authenticate(access_token=access_token)
